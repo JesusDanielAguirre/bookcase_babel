@@ -33,7 +33,7 @@ public class Book {
 	private String bookTitle;
 	
 	@Column(name = "book_volume")
-	private String bookVolume;
+	private Integer bookVolume;
 	
 	@NonNull
 	 @OneToOne(cascade = CascadeType.ALL)
