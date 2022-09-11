@@ -3,7 +3,6 @@ package com.babel.babelbackend.models;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,29 +16,20 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
-@NoArgsConstructor
 @Entity
-@Table(name ="book")
-public class Book {
-	
-	
+@NoArgsConstructor
+@Table(name="room_catalog")
+public class Room {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_book")
+	@Column(name = "id_room")
 	private Long id;
 	
-	@Column(name = "book_title")
-	private String bookTitle;
-	
-	@Column(name = "book_volume")
-	private Integer bookVolume;
-	
 	@NonNull
-	 @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id_location",foreignKey =@ForeignKey(name = "fk_book_location1"))
-    private Location location;
-
+	@Column(name = "room_name")
+	private String roomName;
+	
 	
 
 }

@@ -1,0 +1,61 @@
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 0px;
+    background-color: #f1eeee;
+}
+
+label.form-label {
+    color: #5A0609;
+    font-weight: bold;
+    font-size: medium;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+input.form-control {
+    background-color: #fdfdfd;
+    size: 40px;
+    padding: 5px;
+    font-size: medium;
+    border-radius: 10px;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+select.form-select {
+    border-radius: 10px;
+}
+
+input::placeholder {
+    font-size: medium;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+button.btn {
+    border-radius: 10px;
+}
+
+input.btn {
+
+    font-family: 'IBM Plex Sans', sans-serif;
+    border-radius: 10px;
+    font-size: medium;
+    width: 50%;
+    padding: 5px;
+    margin: 10px;
+
+}
+
+.titulo-formulario {
+    text-align: center;
+    margin: 10px;
+    padding: 0px;
+    font-size: 40px;
+    color: #5A0609;
+    font-weight: bold;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+@media (max-width:200px) {
+    .titulo-formulario {
+        margin-left: 5px;
+    }
+}

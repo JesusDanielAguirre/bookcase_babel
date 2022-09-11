@@ -27,9 +27,13 @@ public class BookService {
 		return (List<Book>) bookRepository.findAll();
 	}
 
-	public void addBook(Book book) {
+	public Map<String, String> addBook(Book book) {
 		
 		bookRepository.save(book);
+		
+		Map<String, String> response= new HashMap<>();
+		response.put("message","Libro guardado con exito");
+		return response;
 		
 	}
 

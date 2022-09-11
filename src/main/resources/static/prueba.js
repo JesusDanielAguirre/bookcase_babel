@@ -5,7 +5,7 @@ const d = document,
   $template = d.getElementById("crud-template").content,
   $fragment = d.createDocumentFragment();
 
-console.dir(d.getElementById("crud-template"));
+
 const getAll = async () => {
   try {
     let res = await fetch("http://localhost/books"),
@@ -18,14 +18,14 @@ const getAll = async () => {
       $template.querySelector(".titulo").textContent = el.bookTitle;
       $template.querySelector(".volumen").textContent = el.bookVolume;
       $template.querySelector(".position").textContent = el.location.position;
-      $template.querySelector(".sala").textContent = el.location.room;
+      $template.querySelector(".sala").textContent = el.location.room.roomName;
       $template.querySelector(".pasillo").textContent = el.location.hallway;
       $template.querySelector(".librero").textContent = el.location.bookcase;
       $template.querySelector(".edit").dataset.id = el.id;
       $template.querySelector(".edit").dataset.titulo = el.bookTitle;
       $template.querySelector(".edit").dataset.volumen = el.bookVolume;
       $template.querySelector(".edit").dataset.position = el.location.position;
-      $template.querySelector(".edit").dataset.sala = el.location.room;
+      $template.querySelector(".edit").dataset.sala = el.location.room.id;
       $template.querySelector(".edit").dataset.pasillo = el.location.hallway;
       $template.querySelector(".edit").dataset.librero = el.location.bookcase;
       $template.querySelector(".delete").dataset.id = el.id;
@@ -47,34 +47,38 @@ const getAll = async () => {
 
 d.addEventListener("DOMContentLoaded", getAll);
 
-d.addEventListener("submit", async (e) => {
+$form.addEventListener("submit", async (e) => {
+  console.log("hola");
   if (e.target === $form) {
     e.preventDefault();
-    console.log("post");
     if (!e.target.id.value) {
       //Create - POST
       try {
-        let options = {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=utf-8",
-            },
-            body: JSON.stringify({
-              bookTitle: e.target.bookTitle.value,
-              bookVolume: e.target.bookVolume.value,
-              location: {
-                room: e.target.room.value,
-                hallway: e.target.hallway.value,
-                bookcase: e.target.bookcase.value,
-                position: e.target.position.value,
-              },
-            }),
-          },
-          res = await fetch("http://localhost/addbook", options),
-          json = await res.json();
-        console.log(json);
+        let data = {
+          bookTitle: e.target.bookTitle.value,
+          bookVolume: e.target.bookVolume.value,
+          location: {
+            hallway: e.target.hallway.value,
+            bookcase: e.target.bookcase.value,
+            position: e.target.position.value,
+            room: {
+              id: e.target.cars.value
+            }
+          }
+        }
 
-        if (!res.status.ok) 
+        let options = {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json; charset=utf-8",
+          },
+          body: JSON.stringify(data),
+        }
+
+        let res = await fetch("http://localhost/addbook", options),
+          json = await res.json();
+
+        if (res.status.ok)
           throw { status: res.status, statusText: res.statusText };
 
         location.reload();
@@ -89,23 +93,25 @@ d.addEventListener("submit", async (e) => {
       //Update - PUT
       try {
         let options = {
-            method: "PUT",
-            headers: {
-              "Content-type": "application/json; charset=utf-8",
-            },
-            body: JSON.stringify({
-              id: e.target.id.value,
-              bookTitle: e.target.bookTitle.value,
-              bookVolume: e.target.bookVolume.value,
-              location: {
-                id: e.target.id.value,
-                room: e.target.room.value,
-                hallway: e.target.hallway.value,
-                bookcase: e.target.bookcase.value,
-                position: e.target.position.value,
-              },
-            }),
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json; charset=utf-8",
           },
+          body: JSON.stringify({
+            id: e.target.id.value,
+            bookTitle: e.target.bookTitle.value,
+            bookVolume: e.target.bookVolume.value,
+            location: {
+              id: e.target.id.value,
+              hallway: e.target.hallway.value,
+              bookcase: e.target.bookcase.value,
+              position: e.target.position.value,
+              room: {
+                id: e.target.cars.value
+              }
+            }
+          }),
+        },
           res = await fetch(`http://localhost/updatebook`, options),
           json = await res.json();
 
@@ -128,7 +134,7 @@ d.addEventListener("click", async (e) => {
     $title.textContent = "Editar Libro";
     $form.bookTitle.value = e.target.dataset.titulo;
     $form.bookVolume.value = e.target.dataset.volumen;
-    $form.room.value = e.target.dataset.sala;
+    $form.cars.value = e.target.dataset.sala;
     $form.hallway.value = e.target.dataset.pasillo;
     $form.bookcase.value = e.target.dataset.librero;
     $form.position.value = e.target.dataset.position;
@@ -144,11 +150,11 @@ d.addEventListener("click", async (e) => {
       //Delete - DELETE
       try {
         let options = {
-            method: "DELETE",
-            headers: {
-              "Content-type": "application/json; charset=utf-8",
-            },
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json; charset=utf-8",
           },
+        },
           res = await fetch(
             `http://localhost/deletebook/${e.target.dataset.id}`,
             options
@@ -165,3 +171,29 @@ d.addEventListener("click", async (e) => {
     }
   }
 });
+
+function createOption(objectCatalog) {
+  return `<option value=${objectCatalog.id}>${objectCatalog.roomName}</option>`
+}
+
+function addRoom(catalog) {
+  let card = "<option selected>selecciona una opcion</option>";
+  for (option of catalog) {
+    card += createOption(option);
+  }
+  document.getElementById("cars").innerHTML = card;
+}
+function apiFetch() {
+  fetch("http://localhost/room/catalog")
+    .then(response => response.json())
+    .then(dataJSON => {
+      console.log(dataJSON);
+      addRoom(dataJSON);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+apiFetch(); 
+

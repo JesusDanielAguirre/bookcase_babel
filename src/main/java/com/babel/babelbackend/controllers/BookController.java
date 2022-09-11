@@ -37,8 +37,9 @@ public class BookController {
 	}
 
 	@PostMapping(value = "/addbook", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void addBook(@RequestBody Book book) {
-		bookService.addBook(book);
+	public Map<String, String> addBook(@RequestBody Book book) {
+		return bookService.addBook(book);
+		
 	}
 	
 	@PutMapping(value = "/updatebook", consumes = MediaType.APPLICATION_JSON_VALUE)
